@@ -11,7 +11,7 @@ import SwiftUI
 struct RSI_GeneratorApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            GameView()
         }
     }
 }
