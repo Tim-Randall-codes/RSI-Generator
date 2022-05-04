@@ -8,7 +8,38 @@
 import SwiftUI
 import SpriteKit
 
+// has a menu with new game button and high scores button
+// game lets you touch dots for 30 seconds, counts how many you touched, shows the 30 second countdown
+// high scores screen has a list of the ten highest
+// if you get greater than one of those high scores the user can enter their high score on a different screen.
+// game over screen either gives them this option or they press button to go back to main menu
+
+var touchedDots: Int = 0
+var timeLeft: Int = 30
+
+struct BossView: View {
+    @StateObject var viewRouter: ViewRouter
+    var body: some View {
+        if viewRouter.view == 0 {
+            TitleView(viewRouter: viewRouter)
+        }
+        else if viewRouter.view == 1 {
+            GameView(viewRouter: viewRouter)
+        }
+    }
+}
+
+struct TitleView: View {
+    @StateObject var viewRouter: ViewRouter
+    var body: some View {
+        VStack{
+            Text("Hello world")
+        }
+    }
+}
+
 struct GameView: View {
+    @StateObject var viewRouter: ViewRouter
     var scene: SKScene {
         let scene = GameScene()
         scene.size = CGSize(width: 390, height: 844)
@@ -21,19 +52,39 @@ struct GameView: View {
     }
 }
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate { // makes scene conform to the contact delegate
+    var displayNum: SKLabelNode!
+    var displayTime: SKLabelNode!
     override func didMove(to view: SKView) {
         backgroundColor = SKColor.black
+        displayNum = SKLabelNode(fontNamed: "Arial")
+        displayNum.text = "Hits: \(touchedDots)"
+        displayNum.fontSize = 20
+        displayNum.position = CGPoint(x: 50, y: 40)
+        self.addChild(displayNum)
+        displayTime = SKLabelNode(fontNamed: "Arial")
+        displayTime.text = "0:\(timeLeft)"
+        displayTime.fontSize = 20
+        displayNum.position = CGPoint(x: 50, y: 60)
+        self.addChild(displayTime)
         run(SKAction.repeatForever(
               SKAction.sequence([
                 SKAction.run(addCircle),
                 SKAction.wait(forDuration: 0.2)
                 ])))
+        let timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            timeLeft -= 1
+            self.displayTime.text = "0:\(timeLeft)"
+            if timeLeft == 0 {
+                timer.invalidate()
+            }
+        }
     }
     func addCircle() {
         let circle = SKShapeNode(circleOfRadius: 50)
         circle.fillColor = .yellow
         let randomX = Int.random(in: 1..<391)
+        circle.name = "circle"
         circle.position = CGPoint(x: randomX, y: 844)
         addChild(circle)
         
@@ -41,5 +92,18 @@ class GameScene: SKScene {
         let actionMoveDone = SKAction.removeFromParent()
         
         circle.run(SKAction.sequence([actionMove, actionMoveDone]))
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // makes sure that if there are multiple touches, any but the first one will end this function
+        guard let touch = touches.first else {
+            return
+          }
+        let location = touch.location(in: self)
+        let touchedNode = atPoint(location)
+        if touchedNode.name == "circle" {
+            touchedNode.removeFromParent()
+            touchedDots += 1
+            displayNum.text = "Hits: \(touchedDots)"
+        }
     }
 }
