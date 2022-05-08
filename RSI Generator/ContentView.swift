@@ -17,29 +17,7 @@ import SpriteKit
 var touchedDots: Int = 0
 var timeLeft: Int = 30
 
-struct BossView: View {
-    @StateObject var viewRouter: ViewRouter
-    var body: some View {
-        if viewRouter.view == 0 {
-            TitleView(viewRouter: viewRouter)
-        }
-        else if viewRouter.view == 1 {
-            GameView(viewRouter: viewRouter)
-        }
-    }
-}
-
-struct TitleView: View {
-    @StateObject var viewRouter: ViewRouter
-    var body: some View {
-        VStack{
-            Text("Hello world")
-        }
-    }
-}
-
 struct GameView: View {
-    @StateObject var viewRouter: ViewRouter
     var scene: SKScene {
         let scene = GameScene()
         scene.size = CGSize(width: 390, height: 844)
@@ -56,6 +34,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate { // makes scene conform to t
     var displayNum: SKLabelNode!
     var displayTime: SKLabelNode!
     override func didMove(to view: SKView) {
+        touchedDots = 0
+        timeLeft = 30
         backgroundColor = SKColor.black
         displayNum = SKLabelNode(fontNamed: "Arial")
         displayNum.text = "Hits: \(touchedDots)"
@@ -77,6 +57,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate { // makes scene conform to t
             self.displayTime.text = "0:\(timeLeft)"
             if timeLeft == 0 {
                 timer.invalidate()
+                let secondScene = GameScene2()
+                secondScene.scaleMode = .aspectFill
+                self.scene?.view?.presentScene(secondScene)
             }
         }
     }
