@@ -58,7 +58,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate { // makes scene conform to t
             if timeLeft == 0 {
                 timer.invalidate()
                 let secondScene = GameScene2()
-                secondScene.scaleMode = .aspectFill
                 self.scene?.view?.presentScene(secondScene)
             }
         }
