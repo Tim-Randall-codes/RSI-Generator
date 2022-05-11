@@ -41,3 +41,4 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         }
     }
 }
+

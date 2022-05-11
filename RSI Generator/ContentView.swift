@@ -8,14 +8,6 @@
 import SwiftUI
 import SpriteKit
 
-// has a menu with new game button and high scores button
-// game lets you touch dots for 30 seconds, counts how many you touched, shows the 30 second countdown
-// high scores screen has a list of the ten highest
-// if you get greater than one of those high scores the user can enter their high score on a different screen.
-// game over screen either gives them this option or they press button to go back to main menu
-// when you get a random high score a msg will say things like "Take a look at yourself and assess what you are doing with your life"
-// Too bad you have no one to be proud of you.
-
 var touchedDots: Int = 0
 var timeLeft: Int = 30
 
