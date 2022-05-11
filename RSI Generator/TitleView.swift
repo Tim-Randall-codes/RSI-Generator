@@ -35,7 +35,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         let location = touch.location(in: self)
         let touchedNode = atPoint(location) // what node is at that point
         if touchedNode.name == "start" {
-            let gameScene = GameScene()
+            let gameScene = GameScene(size: self.size)
             let fade = SKTransition.fade(with: .black, duration: 1)
             self.scene?.view?.presentScene(gameScene, transition: fade)
         }

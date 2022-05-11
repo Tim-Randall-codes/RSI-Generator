@@ -13,13 +13,15 @@ import SpriteKit
 // high scores screen has a list of the ten highest
 // if you get greater than one of those high scores the user can enter their high score on a different screen.
 // game over screen either gives them this option or they press button to go back to main menu
+// when you get a random high score a msg will say things like "Take a look at yourself and assess what you are doing with your life"
+// Too bad you have no one to be proud of you.
 
 var touchedDots: Int = 0
 var timeLeft: Int = 30
 
 struct GameView: View {
     var scene: SKScene {
-        let scene = GameScene()
+        let scene = GameScene2()
         scene.size = CGSize(width: 390, height: 844)
         scene.scaleMode = .fill
         return scene
@@ -57,7 +59,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate { // makes scene conform to t
             self.displayTime.text = "0:\(timeLeft)"
             if timeLeft == 0 {
                 timer.invalidate()
-                let secondScene = GameScene2()
+                let secondScene = GameScene2(size: self.size)
                 self.scene?.view?.presentScene(secondScene)
             }
         }
